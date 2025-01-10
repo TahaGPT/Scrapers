@@ -68,8 +68,8 @@ def scrape_results(driver):
 # Main function
 def main():
     # Credentials
-    username = "activelang72@gmail.com"
-    password = "Linkedinpassword"
+    username = ""
+    password = ""
 
     # Keywords
     keyword = "software engineer"

@@ -29,12 +29,6 @@ This repository contains:
 
 ---
 
-## 🎮 Demo & Usage
-
-### 🎥 Demo
-![Scraping in Action](https://via.placeholder.com/800x400?text=Scraping+in+Action)
-
-
 ## 🎉 Contributing
 We welcome contributions! Please follow these steps:
 1. Fork the repository.

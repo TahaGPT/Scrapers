@@ -53,8 +53,6 @@ if __name__ == '__main__':
         'Parent_asin' : [],
         'Bought_Together' : [] 
     }
-    links, cat = generateMenu('https://www.amazon.com'
-    for link in links:
-        
+    links, cat = generateMenu('https://www.amazon.com')
 
     

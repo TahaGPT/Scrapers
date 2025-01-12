@@ -13,14 +13,27 @@ headers = {"User-Agent": 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N)
 def generateMenu(url):
     # session = requests.Session()
     # session.headers.update({"User-Agent": UserAgent().random})
-    response = req.get(url, headers  = headers)
-    if not response.ok:
-        print("Server responded with exit code:", response.status_code) # if scrapping is not allowed
-        return None
-    else:    
-        soup = bsp(response.text, 'lxml')
-        links = soup.find_all('div', class_ = 'a-link-normal _fluid-quad-image-label-v2_style_centerImage__30wh- aok-block image-window')
-        
+    driver = webdriver.Chrome()
+    driver.get(url)
+    #   It will scroll to right above the footer of the page then scoll to the top then back to the bottom untill there is no new items being loaded
+
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight - 700);")
+    time.sleep(10) 
+    html = driver.page_source
+    driver.quit()          
+    soup = bsp(html, 'lxml')
+    boxes = soup.find_all('a', class_ = 'a-link-normal _fluid-quad-image-label-v2_style_centerImage__30wh- aok-block image-window')
+    print(boxes)
+    links = []
+    categ = []
+    for box in boxes:
+        actual = box.get('href')
+        print(actual)
+        links.extend(url + actual)
+        som = box.get('aria-label')
+        categ.extend(som)
+        print(som)
+    return links, som
 
 
 if __name__ == '__main__':
@@ -40,6 +53,8 @@ if __name__ == '__main__':
         'Parent_asin' : [],
         'Bought_Together' : [] 
     }
-    generateMenu('https://www.amazon.com/')
+    links, cat = generateMenu('https://www.amazon.com'
+    for link in links:
+        
 
     

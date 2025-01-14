@@ -8,6 +8,7 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
+from fake_useragent import UserAgent
 
 firefox_path = "/usr/bin/firefox"  # Example for Linux
 geckodriver_path = "/snap/bin/geckodriver"
@@ -51,28 +52,32 @@ def generateMenu():
 
 def giveProducts(url):
     print("VISITING : ", url)
-    driver = webdriver.Chrome()
-    # driver = webdriver.Firefox()
-    driver.get(url)
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(10)
-    html = driver.page_source
+    # driver = webdriver.Chrome()
+    # # driver = webdriver.Firefox()
+    # driver.get(url)
+    # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    # time.sleep(10)
+    # html = driver.page_source
     # driver.quit()
-    response = req.get(url, headers = headers)
+    # response = req.get(url, headers = headers)
+    # session = requests.Session()
+    # session.headers.update({"User-Agent": UserAgent().random})
+    response = req.get(url, headers = {"User-Agent": UserAgent().random})
     if not response.ok:
-        print(f"Server exited with code : {reponse.status_code}")
-    soup = bsp(response.text, 'lxml')
-    print(soup)
-    products = soup.find_all('a', class_ = 'a-link-normal s-line-clamp-2 s-link-style a-text-normal')['href']
-    for product in products:
-        product = url + product
-    
-    nextP = soup.find('a', class_ = 's-pagination-item s-pagination-next s-pagination-button s-pagination-button-accessibility s-pagination-separator')['href']
-    if nextP:
-        url = base + nextP
-        return products, url
+        print(f"Product exited with Code : {response.status_code}")
     else:
-        return products, NULL
+        soup = bsp(response.text, 'lxml')
+        print(soup)
+        products = soup.find_all('a', class_ = 'a-link-normal s-line-clamp-2 s-link-style a-text-normal')['href']
+        for product in products:
+            product = url + product
+        
+        nextP = soup.find('a', class_ = 's-pagination-item s-pagination-next s-pagination-button s-pagination-button-accessibility s-pagination-separator')['href']
+        if nextP:
+            url = base + nextP
+            return products, url
+        else:
+            return products, NULL
 
 if __name__ == '__main__':
     info = {

@@ -32,24 +32,69 @@
 # result = string.replace(substring, "")
 # print(result)  # Output: "Hello, !"
 
+# import pandas as pd
+
+# file_path = "AmazonCategory.csv"  # Update with your actual path
+
+# # Read the CSV file with semicolon as the delimiter
+# df = pd.read_csv(file_path, delimiter=";", encoding="utf-8")
+
+# # Print column names to verify
+# print("Column names in CSV:", df.columns)
+
+# # Remove duplicates based on "Subcategory 1"
+# df_deduplicated = df.drop_duplicates(subset="Category", keep="first")
+
+# # Save cleaned data
+# output_path = "AmazonCategories.csv"
+# df_deduplicated.to_csv(output_path, index=False, sep=";")  # Keep semicolon delimiter
+
+# print(f"Duplicates removed. Cleaned data saved to {output_path}.")
+
+
 import pandas as pd
 
-file_path = "AmazonCategories_Cleaned_Final2.csv"  # Update with your actual path
+categories = [
+    "All+Beauty",
+    "Amazon+Fashion",
+    "Appliances",
+    "Arts+Crafts+Sewing",
+    "Automotive",
+    "Baby+Products",
+    "Beauty+Personal+Care",
+    "Books",
+    "CDs+Vinyl",
+    "Cell+Phones+Accessories",
+    "Clothing+Shoes+Jewelry",
+    "Digital+Music",
+    "Electronics",
+    "Gift+Cards",
+    "Grocery+Gourmet+Food",
+    "Handmade+Products",
+    "Health+Household",
+    "Health+Personal+Care",
+    "Home+Kitchen",
+    "Industrial+Scientific",
+    "Kindle+Store",
+    "Magazine+Subscriptions",
+    "Movies+TV",
+    "Musical+Instruments",
+    "Office+Products",
+    "Patio+Lawn+Garden",
+    "Pet+Supplies",
+    "Software",
+    "Sports+Outdoors",
+    "Subscription+Boxes",
+    "Tools+Home+Improvement",
+    "Toys+Games",
+    "Video+Games",
+    "Health+Household+Baby+Care",
+    "Garden+Outdoor",
+    "Handmade"
+]
 
-# Read the CSV file with semicolon as the delimiter
-df = pd.read_csv(file_path, delimiter=";", encoding="utf-8")
-
-# Print column names to verify
-print("Column names in CSV:", df.columns)
-
-# Remove duplicates based on "Subcategory 1"
-df_deduplicated = df.drop_duplicates(subset=["Mai+Category", "Subcategory+1"], keep="first")
-
-# Save cleaned data
-output_path = "AmazonCategories_Cleaned_Final.csv"
-df_deduplicated.to_csv(output_path, index=False, sep=";")  # Keep semicolon delimiter
-
-print(f"Duplicates removed. Cleaned data saved to {output_path}.")
+df = pd.DataFrame({"Category": categories})
+df.to_csv("categories.csv", index=False)
 
 
 

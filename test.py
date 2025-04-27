@@ -126,8 +126,53 @@ options = {
         "User-Agent": UserAgent().random
     }
 }
+
+
+agent = {
+    "main_category" : "",
+    "title" : "",
+    "average_rating" : 0.0,
+    "rating_number" : 0,
+    "features":[],
+    "description":[],
+    "price" : "",
+    "images":[],
+    "videos":[],
+    "store" : "",
+    "categories" : "",
+    "details":{},
+    "parent_asin" : "",
+    "bought_together": [],
+    "link" : "",
+    "date" : ""
+}
+
+comment = {
+    "rating" : 0.0,
+    "title" : "",
+    "text" : "",
+    "images" : "",
+    "asin" : "",
+    "parent_asin" : "",
+    "user_id" : "",
+    "timestamp" : "",
+    "verified_purchase" : 0,
+    "helpful_vote" : "",
+    "link" : ""
+}
+
 link = "http://amazon.com/New-Balance-Womens-Sneaker-Nimbus/dp/B093QHV57C/ref=sr_1_8?_encoding=UTF8&sr=8-8"
+print("\n\n\n\n\n\n-------------------------------------------------------------------Product-------------------------------------------------------------------")
+
+# Extracting Links
+link = row['Products']
 print(link)
+agent["link"] = link
+
+# Extracting Categories
+category = row['Categories']
+print("Category :", category)
+agent["main_category"] = category
 
 driver = webdriver.Chrome(seleniumwire_options = options)
 driver.get(link)
@@ -181,6 +226,8 @@ if detailsBoard:
 else:
     details = {}
 print("Details :", details)
+agent["details"] = details
+
 date = ""
 try:
     for value in reversed(list(details.values())):
@@ -201,10 +248,9 @@ except:
     print("Date not found")
     date = ""
 print("Date :", date)
-# # extracting Category
-# category = row['Categories']
-# print("Category :", category)
-# agent["main_category"] = category
+agent["date"] = date
+
+
 # extracting Title
 try:
     titleBoard = soup.find('span', id = 'productTitle')
@@ -212,7 +258,8 @@ try:
 except:
     title = ""
 print("Title :", title)
-# agent["title"] = title
+agent["title"] = title
+
 # extracting ratings
 try:
     ratingBoard = soup.find('div', id = 'averageCustomerReviews')
@@ -228,9 +275,10 @@ except:
     avgRating = ""
     ratingNo = ""
 print("Average Rating :", avgRating)
-# agent["average_rating"] = avgRating
+agent["average_rating"] = avgRating
 print("Rating :", ratingNo)
-# agent["rating_number"] = ratingNo
+agent["rating_number"] = ratingNo
+
 # extracting price
 try:
     priceBoard = soup.find('span', class_ = 'a-offscreen')
@@ -246,7 +294,8 @@ try:
 except:
     price = ""
 print("Price :", price)
-# agent["price"] = price
+agent["price"] = price
+
 # exracting media
 try:
     mediaBoard = soup.find('div', id = 'altImages')
@@ -266,9 +315,10 @@ except:
     images = []
     vid = []
 print("Images :", images)
-# agent["images"] = images   
+agent["images"] = images   
 print("Videos :", videos)
-# agent["videos"] = vids
+agent["videos"] = videos
+
 # extracting the store
 try:
     storeBoard = soup.find('tr', class_ = 'a-spacing-small po-brand').find('td', class_ = 'a-span9')
@@ -281,7 +331,8 @@ except:
     except:
         store = ""
 print("Store :", store)
-# agent["store"] = store
+agent["store"] = store
+
 # extracting features
 try:
     featuresBoard = soup.find('ul', class_ = 'a-unordered-list a-vertical a-spacing-mini').find_all('li')
@@ -289,7 +340,7 @@ try:
 except:
     features = []
 print("Features :", features)
-# agent["features"] = features
+agent["features"] = features
     
                 
 # extracting asin
@@ -298,7 +349,7 @@ try:
 except:
     asin = ""
 print("ASIN :", asin)
-# agent["parent_asin"] = asin
+agent["parent_asin"] = asin
 
 # agent["date"] = date
 
@@ -312,7 +363,8 @@ try:
 except:
     description = []
 print("Description :", description)
-# agent["description"] = description
+agent["description"] = description
+
 # extracting bought together
 try:
     boughtTogetherBoard = soup.find('div', id = 'a-cardui _c3AtZ_new-thumbnail-box_1W9Ku _c3AtZ_two-item-thumbnail-box_7kF95')
@@ -327,7 +379,8 @@ try:
 except:
     boughtTogether = []
 print("Bought Together :", boughtTogether)
-# agent["bought_together"] = boughtTogether
+agent["bought_together"] = boughtTogether
+
 # extracting further categories
 try:
     categoriesBoard = soup.find_all('div', id= 'tp-inline-twister-dim-values-container')
@@ -336,9 +389,11 @@ try:
 except:
     categories = []
 print("Categories :", categories)
-# agent["categories"] = categories
+agent["categories"] = categories
+
+
 ############################################################################################################################################################
-# print("\n\n\n-------------------------------------------------------------------Comments-------------------------------------------------------------------")
+print("\n\n\n-------------------------------------------------------------------Comments-------------------------------------------------------------------")
 # extracting reviews
 try:
     reviewsUS = soup.find('ul', id = 'cm-cr-dp-review-list').find_all('li')
@@ -351,7 +406,6 @@ except:
     reviewsGlobal = []
 reviews = reviewsUS + reviewsGlobal
 for review in reviews:
-    
     try:
         # extracting rating
         reviewRatingBoard = review.find('h5')
@@ -376,10 +430,12 @@ for review in reviews:
         reviewRating = ""
         reviewTitle = ""
     print("Rating :", reviewRating)
-    # comment["rating"].append(reviewRating)
+    comment["rating"] = reviewRating
+
     # extracting title
     print("Title :", reviewTitle)
-    # comment["title"].append(reviewTitle)
+    comment["title"] = reviewTitle
+
     # extracting Text
     try:
         reviewTextBoard = review.find('div', class_ = 'a-expander-content reviewText review-text-content a-expander-partial-collapse-content')
@@ -387,7 +443,8 @@ for review in reviews:
     except:
         reviewText = ""
     print("Review :", reviewText)
-    # comment["text"].append(reviewText)
+    comment["text"] = reviewText
+
     # extracting images
     try:
         reviewImages = review.find('div', class_ = 'review-image-tile-section').find_all('img')
@@ -395,25 +452,29 @@ for review in reviews:
     except:
         Images = []
     print("Images :", Images)
-    # comment["images"].append(Images)
+    comment["images"] = Images
+
     # extracting ASIN
     try:
         reviewAsin = review.get('id')
     except:
         reviewAsin = ""
     print("ASIN :", reviewAsin)
-    # comment["asin"].append(reviewAsin)
+    comment["asin"] = (reviewAsin)
+
     # extracting parent ASIN
     reviewParentAsin = asin
     print("Parent ASIN :", reviewParentAsin)
-    # comment["parent_asin"].append(review)
+    comment["parent_asin"] = review
+
     # eaxtracting username
     try:
         username = review.find('span', class_ = 'a-profile-name').text.strip()
     except:
         username = ""
     print("Username :", username)
-    # comment["user_id"].append(username)
+    comment["user_id"] = username
+
     # extracting date
     try:
         reviewTimeBoard = review.find('span', class_ = 'a-size-base a-color-secondary review-date')
@@ -424,12 +485,13 @@ for review in reviews:
     except:
         reviewTime = ""
     print("Date :", reviewTime)
-    # comment["timestamp"].append(reviewTime)
+    comment["timestamp"] = reviewTime
     verified = False
     if review.find('span', class_ = 'a-size-mini a-color-state a-text-bold'):
         verified = True
     print("Verified :", verified)
-    # comment["verified_purchase"].append(verified)
+    comment["verified_purchase"] = verified
+
     # extracting helpfulness
     try:
         reviewHelpful = review.find('span', class_ = 'a-size-base a-color-tertiary cr-vote-text')
@@ -444,16 +506,19 @@ for review in reviews:
     except:
         helpful = 0
     print("Helpful :", helpful)
-    # comment["helpful_vote"].append(helpful)
-    # myMeta = pd.DataFrame(agent)
-    # myRev = pd.DataFrame(comment)
-# if not me:
-#     # myMeta.to_csv(meta, mode='a', index = False)
-#     myRev.to_csv(rev, mode='a', index = False)
-#     me = True
-# else:
-#     # myMeta.to_csv(meta, mode='a', header=False, index = False)
-#     myRev.to_csv(rev, mode='a', header=False, index = False)
+    comment["helpful_vote"] = helpful
+
+    # extracting link
+    comment["link"] = link
+    myMeta = pd.DataFrame(agent)
+    myRev = pd.DataFrame(comment)
+if not me:
+    myMeta.to_csv(meta, mode='a', index = False)
+    myRev.to_csv(rev, mode='a', index = False)
+    me = True
+else:
+    myMeta.to_csv(meta, mode='a', header=False, index = False)
+    myRev.to_csv(rev, mode='a', header=False, index = False)
 
 print("|||||||||||||||||||||||||||| Data appended successfully with continued index. |||||||||||||||||||||||||||")
     

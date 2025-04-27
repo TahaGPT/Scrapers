@@ -126,7 +126,7 @@ options = {
         "User-Agent": UserAgent().random
     }
 }
-link = "https://www.amazon.com/Maybelline-Volumizing-Buildable-Lengthening-Multiplying/dp/B08H3JPH74/?_encoding=UTF8&ref_=pd_hp_d_btf_nta-top-picks"
+link = "https://www.amazon.com/SPIDEY-HIS-AMAZING-FRIENDS-Web-Spinners/dp/B0C8WKPSGV/ref=sr_1_2_sspa?_encoding=UTF8&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1"
 print(link)
 
 driver = webdriver.Chrome(seleniumwire_options = options)
@@ -244,16 +244,18 @@ print("Price :", price)
 # agent["price"] = price
 # exracting media
 try:
-    mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-vertical a-spacing-top-micro regularAltImageViewLayout')
+    mediaBoard = soup.find('div', id = 'altImages')
     if not mediaBoard:
-        mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-vertical a-spacing-top-micro gridAltImageViewLayoutIn1x7')
+        mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-vertical a-spacing-top-micro regularAltImageViewLayout')
         if not mediaBoard:
-            mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-vertical a-spacing-top-extra-large regularAltImageViewLayout')
+            mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-vertical a-spacing-top-micro gridAltImageViewLayoutIn1x7')
             if not mediaBoard:
-                mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-vertical a-spacing-top-extra-large regularAltImageViewLayout')
+                mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-vertical a-spacing-top-extra-large regularAltImageViewLayout')
+                if not mediaBoard:
+                    mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-vertical a-spacing-top-extra-large regularAltImageViewLayout')
     media = mediaBoard.find_all('img')
     images = [img['src'] for img in media]
-    vids = images[-1]
+    vid.extend(images[-1])
     images = images[0:-1]
 except:
     images = []
@@ -347,16 +349,22 @@ for review in reviews:
     
     try:
         # extracting rating
-        reviewRatingBoard = review.find('a', {'data-hook': 'review-star-rating'})
+        reviewRatingBoard = review.find('h5')
         reviewRatingBoard = reviewRatingBoard.find_all('span')
         try:
             reviewRating = reviewRatingBoard[0].text.strip()
+            print("Rating Found")
             reviewRating = reviewRating[0:3]
         except:
             reviewRating = ""
 
         try:
-            reviewTitle = reviewRatingBoard[-1].text.strip()
+            for span in reversed(reviewRatingBoard):  # iterate from the end
+                text = span.get_text(strip=True)
+                if text:  # if text is not empty
+                    reviewTitle = text
+                    break
+            print("Title Found")
         except:
             reviewTitle = ""
     except:

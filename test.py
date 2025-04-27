@@ -126,7 +126,7 @@ options = {
         "User-Agent": UserAgent().random
     }
 }
-link = "https://www.amazon.com/SPIDEY-HIS-AMAZING-FRIENDS-Web-Spinners/dp/B0C8WKPSGV/ref=sr_1_2_sspa?_encoding=UTF8&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1"
+link = "http://amazon.com/New-Balance-Womens-Sneaker-Nimbus/dp/B093QHV57C/ref=sr_1_8?_encoding=UTF8&sr=8-8"
 print(link)
 
 driver = webdriver.Chrome(seleniumwire_options = options)
@@ -155,10 +155,7 @@ while True:
 html = driver.page_source
 driver.quit()
 soup = bsp(html, 'lxml')
-feat = []
-img = []
-vid = []
-det = []
+
 # extracting details
 try:
     detailsBoard = soup.find('div', class_ = 'a-expander-content a-expander-section-content a-section-expander-inner').find('table', class_ = 'a-keyvalue prodDetTable').find_all('tr')
@@ -236,8 +233,16 @@ print("Rating :", ratingNo)
 # agent["rating_number"] = ratingNo
 # extracting price
 try:
-    priceBoard = soup.find('div', class_ = 'a-section a-spacing-none aok-align-center aok-relative').find('span', class_ = 'aok-offscreen')
-    price = priceBoard.text.strip()[0:5]
+    priceBoard = soup.find('span', class_ = 'a-offscreen')
+    if not priceBoard:
+        # priceBoard = soup.find('div', class_ = 'a-section a-spacing-none aok-align-center aok-relative').find('span', class_ = 'aok-offscreen')
+        priceBoard = soup.find('span', class_ = 'a-price-whole')
+        priceBoard2 = soup.find('span', class_ = 'a-price-fraction')
+        price2 = priceBoard2.text.strip()
+        price = priceBoard.text.strip()
+        price = price + price2
+    else:
+        price = priceBoard.text.strip()
 except:
     price = ""
 print("Price :", price)
@@ -255,14 +260,14 @@ try:
                     mediaBoard = soup.find('ul', class_ = 'a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-vertical a-spacing-top-extra-large regularAltImageViewLayout')
     media = mediaBoard.find_all('img')
     images = [img['src'] for img in media]
-    vid.extend(images[-1])
+    videos = [images[-1]]
     images = images[0:-1]
 except:
     images = []
-    vids = []
+    vid = []
 print("Images :", images)
 # agent["images"] = images   
-print("Videos :", vids)
+print("Videos :", videos)
 # agent["videos"] = vids
 # extracting the store
 try:
